@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Control de Asistencia - Instituto Tecnológico de Oaxaca{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'ito-orange': '#ea580c',
+                        'ito-red': '#dc2626',
+                        'ito-gray': '#374151',
+                        'ito-dark': '#1f2937',
+                        'ito-light-gray': '#6b7280'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .sidebar-hidden {
+            transform: translateX(-100%);
+        }
+
+        .sidebar-visible {
+            transform: translateX(0);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+    <!-- Header superior -->
+    <div class="bg-white border-b border-gray-200 px-4 sm:px-6 py-4">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-2 sm:space-x-3">
+                <img src="/static/images/logo-ito.png" alt="Logo ITO" class="w-6 h-6 sm:w-8 sm:h-8 object-contain">
+                <h1 class="text-base sm:text-lg font-medium text-ito-gray">Instituto Tecnológico de Oaxaca</h1>
+            </div>
+            <button id="toggle-sidebar" class="sm:hidden text-ito-gray p-1 rounded-full hover:bg-gray-200">
+                <i data-lucide="menu" class="w-6 h-6"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Layout principal -->
+    <div class="flex min-h-screen">
+        <!-- Sidebar izquierdo con esquinas redondeadas -->
+        <div id="sidebar"
+            class="w-64 sm:w-80 bg-ito-orange p-4 sm:p-6 m-4 rounded-3xl fixed sm:static min-h-[70vh] sm:min-h-[70vh] transition-transform duration-300 ease-in-out z-10 sidebar-visible sm:sidebar-visible">
+            <!-- Título del menú -->
+            <div class="mb-6 sm:mb-8">
+                <h2 class="text-white text-xl sm:text-2xl font-bold">MENU</h2>
+            </div>
+
+            <!-- Opciones del menú -->
+            <div class="space-y-3 sm:space-y-4">
+                <!-- GRUPOS -->
+                <a href="{{ url_for('groups') }}"
+                    class="w-full {% if request.path == '/groups' %}bg-white text-ito-orange{% else %}text-white hover:bg-orange-700{% endif %} py-3 sm:py-4 px-4 sm:px-6 rounded-full text-base sm:text-lg font-semibold transition-colors duration-200 flex items-center justify-center space-x-2">
+                    <i data-lucide="users" class="w-4 h-4 sm:w-5 sm:h-5"></i>
+                    <span>GRUPOS</span>
+                </a>
+
+                <!-- HORARIOS -->
+                <a href="/schedules"
+                    class="w-full {% if request.path == '/schedules' %}bg-white text-ito-orange{% else %}text-white hover:bg-orange-700{% endif %} py-3 sm:py-4 px-4 sm:px-6 rounded-full text-base sm:text-lg font-semibold transition-colors duration-200 flex items-center justify-center space-x-2">
+                    <i data-lucide="calendar" class="w-4 h-4 sm:w-5 sm:h-5"></i>
+                    <span>HORARIOS</span>
+                </a>
+
+                <!-- REPORTES -->
+                <a href="/reports"
+                    class="w-full {% if request.path == '/reports' %}bg-white text-ito-orange{% else %}text-white hover:bg-orange-700{% endif %} py-3 sm:py-4 px-4 sm:px-6 rounded-full text-base sm:text-lg font-semibold transition-colors duration-200 flex items-center justify-center space-x-2">
+                    <i data-lucide="clipboard-list" class="w-4 h-4 sm:w-5 sm:h-5"></i>
+                    <span>REPORTES</span>
+                </a>
+
+                <!-- CONFIGURACIÓN -->
+                <a href="/settings"
+                    class="w-full {% if request.path == '/settings' %}bg-white text-ito-orange{% else %}text-white hover:bg-orange-700{% endif %} py-3 sm:py-4 px-4 sm:px-6 rounded-full text-base sm:text-lg font-semibold transition-colors duration-200 flex items-center justify-center space-x-2">
+                    <i data-lucide="settings" class="w-4 h-4 sm:w-5 sm:h-5"></i>
+                    <span>CONFIGURACIÓN</span>
+                </a>
+
+                <!-- Separador -->
+                <div class="border-t border-orange-600 my-4 sm:my-6"></div>
+
+                <!-- CERRAR SESIÓN -->
+                <a href="/logout"
+                    class="w-full text-white py-3 sm:py-4 px-4 sm:px-6 rounded-full text-base sm:text-lg font-semibold hover:bg-orange-700 transition-colors duration-200 flex items-center justify-center space-x-2">
+                    <i data-lucide="log-out" class="w-4 h-4 sm:w-5 sm:h-5"></i>
+                    <span>CERRAR SESIÓN</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Contenido principal -->
+        <div class="flex-1 p-4 sm:p-6">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div
+                class="mb-4 p-3 sm:p-4 rounded-lg flex items-center space-x-2 sm:space-x-3 {% if category == 'success' %}bg-green-50 text-green-700 border border-green-200{% else %}bg-red-50 text-red-700 border border-red-200{% endif %}">
+                <i data-lucide="{% if category == 'success' %}check-circle{% else %}alert-circle{% endif %}"
+                    class="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0"></i>
+                <span class="text-sm">{{ message }}</span>
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+
+   <script>
+    lucide.createIcons();
+
+    // Toggle sidebar visibility on mobile
+    const sidebar = document.getElementById('sidebar');
+    const toggleButton = document.getElementById('toggle-sidebar');
+
+    toggleButton.addEventListener('click', () => {
+        sidebar.classList.toggle('sidebar-hidden');
+        sidebar.classList.toggle('sidebar-visible');
+    });
+
+    // Close sidebar when clicking outside on mobile
+    document.addEventListener('click', (event) => {
+        if (window.innerWidth < 640 && !sidebar.contains(event.target) && !toggleButton.contains(event.target)) {
+            sidebar.classList.remove('sidebar-visible');
+            sidebar.classList.add('sidebar-hidden');
+        }
+    });
+    </script>
+</body>
+
+</html>

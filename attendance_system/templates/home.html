@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Inicio - Instituto Tecnológico de Oaxaca{% endblock %}
+{% block content %}
+<div class="flex flex-col items-center justify-center p-6 sm:p-12">
+    <!-- Título principal -->
+    <div class="text-center mb-8 sm:mb-12">
+        <h1 class="text-3xl sm:text-5xl font-bold text-black mb-4 leading-tight">
+            BIENVENIDOS AL CONTROL DE<br class="block sm:hidden">
+            ASISTENCIA.
+        </h1>
+    </div>
+
+    <!-- Logo grande del ITO -->
+    <div class="mb-6 sm:mb-8">
+        <img src="/static/images/logo-ito.png" alt="Logo Instituto Tecnológico de Oaxaca" class="w-48 h-48 sm:w-64 sm:h-64 object-contain">
+    </div>
+
+    <!-- Texto institucional -->
+    <div class="text-center">
+        <h2 class="text-xl sm:text-2xl font-semibold text-black">
+            Instituto Tecnológico De Oaxaca
+        </h2>
+    </div>
+
+    <!-- Enlace temporal para probar -->
+    <div class="mt-4">
+        <a href="{{ url_for('groups') }}" class="text-blue-500 underline">Ir a Grupos (prueba)</a>
+    </div>
+</div>
+{% endblock %}

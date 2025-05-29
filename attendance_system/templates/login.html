@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - Instituto Tecnológico de Oaxaca</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'ito-orange': '#ea580c',
+                        'ito-red': '#dc2626',
+                        'ito-gray': '#374151',
+                        'ito-dark': '#1f2937',
+                        'ito-light-gray': '#6b7280'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-orange-50 via-white to-red-50">
+    <!-- Header con logo institucional -->
+    <div class="absolute top-0 left-0 right-0 bg-white/80 backdrop-blur-sm border-b border-gray-200">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex items-center justify-center space-x-3">
+                <img src="static/images/logo-ito.png" alt="Logo ITO" class="w-8 h-8 object-contain">
+                <h1 class="text-lg font-semibold text-ito-gray">Instituto Tecnológico de Oaxaca</h1>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="min-h-screen flex items-center justify-center px-4 pt-20 pb-8">
+        <div class="w-full max-w-lg">
+            <!-- Card principal -->
+            <div class="bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden">
+                <!-- Header del card -->
+                <div class="bg-gradient-to-r from-ito-orange to-ito-red p-6 text-center">
+                    <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i data-lucide="log-in" class="w-8 h-8 text-white"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-white mb-2">Iniciar Sesión</h2>
+                    <p class="text-orange-100 text-sm">Accede al sistema de control de asistencia</p>
+                </div>
+
+                <!-- Formulario -->
+                <div class="p-6">
+                    <!-- Mensajes flash -->
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="mb-4 p-4 rounded-lg flex items-center space-x-3 {% if category == 'success' %}bg-green-50 text-green-700 border border-green-200{% else %}bg-red-50 text-red-700 border border-red-200{% endif %}">
+                                    <i data-lucide="{% if category == 'success' %}check-circle{% else %}alert-circle{% endif %}" class="w-5 h-5 flex-shrink-0"></i>
+                                    <span class="text-sm">{{ message }}</span>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+
+                    <form action="/login" method="POST" class="space-y-5">
+                        <!-- Campo de email -->
+                        <div class="space-y-2">
+                            <label for="email" class="block text-sm font-medium text-ito-gray">
+                                Correo Electrónico Institucional
+                            </label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i data-lucide="mail" class="w-5 h-5 text-gray-400"></i>
+                                </div>
+                                <input 
+                                    type="email" 
+                                    id="email"
+                                    name="email" 
+                                    class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ito-orange focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white" 
+                                    placeholder="nombre.apellido@ito.mx"
+                                    required
+                                >
+                            </div>
+                        </div>
+
+                        <!-- Campo de contraseña -->
+                        <div class="space-y-2">
+                            <label for="password" class="block text-sm font-medium text-ito-gray">
+                                Contraseña
+                            </label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i data-lucide="lock" class="w-5 h-5 text-gray-400"></i>
+                                </div>
+                                <input 
+                                    type="password" 
+                                    id="password"
+                                    name="password" 
+                                    class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ito-orange focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white" 
+                                    placeholder="••••••••"
+                                    required
+                                >
+                            </div>
+                        </div>
+
+                        <!-- Botón de submit -->
+                        <button 
+                            type="submit" 
+                            class="w-full bg-gradient-to-r from-ito-orange to-ito-red text-white py-3 px-4 rounded-lg font-medium hover:from-orange-700 hover:to-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ito-orange transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center space-x-2"
+                        >
+                            <i data-lucide="log-in" class="w-5 h-5"></i>
+                            <span>Iniciar Sesión</span>
+                        </button>
+                    </form>
+
+                    <!-- Separador -->
+                    <div class="mt-6 pt-6 border-t border-gray-200">
+                        <div class="text-center">
+                            <p class="text-sm text-gray-600 mb-3">¿No tienes una cuenta?</p>
+                            <a 
+                                href="/register" 
+                                class="inline-flex items-center space-x-2 text-ito-orange hover:text-ito-red font-medium transition-colors duration-200"
+                            >
+                                <i data-lucide="user-plus" class="w-4 h-4"></i>
+                                <span>Crear Cuenta</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Elementos decorativos de fondo -->
+    <div class="fixed inset-0 -z-10 overflow-hidden">
+        <div class="absolute -top-40 -right-32 w-80 h-80 bg-orange-400/10 rounded-full blur-3xl"></div>
+        <div class="absolute -bottom-40 -left-32 w-80 h-80 bg-red-400/10 rounded-full blur-3xl"></div>
+    </div>
+
+    <!-- Script para inicializar los iconos de Lucide -->
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

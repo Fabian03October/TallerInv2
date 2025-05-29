@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+{% block title %}Grupos - Instituto Tecnológico de Oaxaca{% endblock %}
+{% block content %}
+<div class="min-h-screen bg-gray-50 p-4 sm:p-6">
+    <!-- Header de la página -->
+    <div class="max-w-7xl mx-auto">
+        <!-- Breadcrumb y título -->
+        <div class="mb-6">
+            <nav class="flex items-center space-x-2 text-sm text-gray-500 mb-4">
+                <a href="{{ url_for('home') }}" class="hover:text-ito-orange transition-colors">
+                    <i data-lucide="home" class="w-4 h-4"></i>
+                </a>
+                <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                <span class="text-ito-gray font-medium">Grupos</span>
+            </nav>
+            
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold text-ito-dark mb-2">Mis Grupos</h1>
+                    <p class="text-ito-light-gray">Profesor: <span class="font-semibold text-ito-gray">{{ teacher_name }}</span></p>
+                </div>
+                
+                <!-- Botón para agregar grupo -->
+                <div class="mt-4 sm:mt-0">
+                    <a href="{{ url_for('add_group') }}" class="inline-flex items-center space-x-2 bg-gradient-to-r from-ito-orange to-ito-red text-white px-6 py-3 rounded-lg font-medium hover:from-orange-700 hover:to-red-700 transition-all duration-200 transform hover:scale-105 shadow-lg">
+                        <i data-lucide="plus" class="w-5 h-5"></i>
+                        <span>Nuevo Grupo</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Estadísticas rápidas -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+                <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <i data-lucide="users" class="w-6 h-6 text-blue-600"></i>
+                    </div>
+                    <div>
+                        <p class="text-2xl font-bold text-ito-dark">{{ groups|length }}</p>
+                        <p class="text-sm text-ito-light-gray">Total de Grupos</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+                <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                        <i data-lucide="calendar-check" class="w-6 h-6 text-green-600"></i>
+                    </div>
+                    <div>
+                        <p class="text-2xl font-bold text-ito-dark">85%</p>
+                        <p class="text-sm text-ito-light-gray">Asistencia Promedio</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+                <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                        <i data-lucide="book-open" class="w-6 h-6 text-ito-orange"></i>
+                    </div>
+                    <div>
+                        <p class="text-2xl font-bold text-ito-dark">{{ groups|map(attribute=2)|unique|list|length }}</p>
+                        <p class="text-sm text-ito-light-gray">Materias Activas</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lista de grupos -->
+{% if groups %}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for group in groups %}
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-200 transform hover:-translate-y-1 overflow-hidden">
+                <!-- Header de la tarjeta -->
+                <div class="bg-gradient-to-r from-ito-orange to-ito-red p-4">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                                <i data-lucide="graduation-cap" class="w-5 h-5 text-white"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-white text-lg">{{ group.group_name }}</h3>
+                                <p class="text-orange-100 text-sm">Grupo Activo</p>
+                            </div>
+                        </div>
+                        <div class="text-white">
+                            <i data-lucide="more-vertical" class="w-5 h-5"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contenido de la tarjeta -->
+                <div class="p-6">
+                    <div class="space-y-4">
+                        <!-- Materia -->
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
+                                <i data-lucide="book" class="w-4 h-4 text-ito-gray"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-ito-light-gray">Materia</p>
+                                <p class="font-semibold text-ito-dark">{{ group.materia }}</p>
+                            </div>
+                        </div>
+
+                        <!-- Información adicional -->
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="text-center p-3 bg-gray-50 rounded-lg">
+                                <p class="text-lg font-bold text-ito-dark">{{ group.num_students }}</p>
+                                <p class="text-xs text-ito-light-gray">Estudiantes</p>
+                            </div>
+                            <div class="text-center p-3 bg-gray-50 rounded-lg">
+                                <p class="text-lg font-bold text-green-600">{{ group.avg_attendance }}%</p>
+                                <p class="text-xs text-ito-light-gray">Asistencia</p>
+                            </div>
+                        </div>
+
+                        <!-- Horario -->
+                        <div class="flex items-center space-x-2 text-sm text-ito-light-gray">
+                            <i data-lucide="clock" class="w-4 h-4"></i>
+                            <span>{{ group.schedule }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Acciones -->
+                    <div class="mt-6 flex space-x-2">
+                        <a href="#" class="flex-1 bg-ito-orange text-white py-2 px-4 rounded-lg text-center font-medium hover:bg-orange-700 transition-colors duration-200 flex items-center justify-center space-x-2">
+                            <i data-lucide="clipboard-list" class="w-4 h-4"></i>
+                            <span>Ver Asistencia</span>
+                        </a>
+                        <a href="#" class="bg-gray-100 text-ito-gray py-2 px-3 rounded-lg hover:bg-gray-200 transition-colors duration-200 flex items-center justify-center">
+                            <i data-lucide="settings" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+            <!-- Estado vacío -->
+            <div class="text-center py-12">
+                <div class="max-w-md mx-auto">
+                    <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i data-lucide="users" class="w-12 h-12 text-gray-400"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-ito-dark mb-2">No tienes grupos asignados</h3>
+                    <p class="text-ito-light-gray mb-6">Comienza creando tu primer grupo para gestionar la asistencia de tus estudiantes.</p>
+                    <a href="{{ url_for('add_group') }}" class="inline-flex items-center space-x-2 bg-gradient-to-r from-ito-orange to-ito-red text-white px-6 py-3 rounded-lg font-medium hover:from-orange-700 hover:to-red-700 transition-all duration-200">
+                        <i data-lucide="plus" class="w-5 h-5"></i>
+                        <span>Crear Primer Grupo</span>
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- Acciones rápidas -->
+        {% if groups %}
+            <div class="mt-12 bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+                <h3 class="text-lg font-semibold text-ito-dark mb-4">Acciones Rápidas</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <a href="#" class="flex items-center space-x-3 p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors duration-200">
+                        <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <i data-lucide="download" class="w-5 h-5 text-blue-600"></i>
+                        </div>
+                        <div>
+                            <p class="font-medium text-ito-dark">Exportar Reportes</p>
+                            <p class="text-sm text-ito-light-gray">Descargar asistencia</p>
+                        </div>
+                    </a>
+                    
+                    <a href="#" class="flex items-center space-x-3 p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors duration-200">
+                        <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                            <i data-lucide="calendar-plus" class="w-5 h-5 text-green-600"></i>
+                        </div>
+                        <div>
+                            <p class="font-medium text-ito-dark">Programar Clase</p>
+                            <p class="text-sm text-ito-light-gray">Nueva sesión</p>
+                        </div>
+                    </a>
+                    
+                    <a href="#" class="flex items-center space-x-3 p-4 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors duration-200">
+                        <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+                            <i data-lucide="bar-chart" class="w-5 h-5 text-ito-orange"></i>
+                        </div>
+                        <div>
+                            <p class="font-medium text-ito-dark">Ver Estadísticas</p>
+                            <p class="text-sm text-ito-light-gray">Análisis detallado</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Script para inicializar iconos -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        lucide.createIcons();
+    });
+</script>
+{% endblock %}

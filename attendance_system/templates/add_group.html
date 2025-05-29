@@ -1,0 +1,354 @@
+{% extends "base.html" %}
+{% block title %}Crear Grupo - Instituto Tecnológico de Oaxaca{% endblock %}
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-gray-50 to-orange-50/30 p-4 sm:p-6">
+    <div class="max-w-2xl mx-auto">
+        <!-- Breadcrumb y navegación -->
+        <div class="mb-6">
+            <nav class="flex items-center space-x-2 text-sm text-gray-500 mb-4">
+                <a href="{{ url_for('home') }}" class="hover:text-ito-orange transition-colors flex items-center space-x-1">
+                    <i data-lucide="home" class="w-4 h-4"></i>
+                    <span>Inicio</span>
+                </a>
+                <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                <a href="{{ url_for('groups') }}" class="hover:text-ito-orange transition-colors">Grupos</a>
+                <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                <span class="text-ito-gray font-medium">Nuevo Grupo</span>
+            </nav>
+
+            <div class="flex items-center space-x-3">
+                <a href="{{ url_for('groups') }}"
+                    class="inline-flex items-center space-x-2 text-ito-light-gray hover:text-ito-orange transition-colors group">
+                    <i data-lucide="arrow-left" class="w-4 h-4 group-hover:translate-x-[-2px] transition-transform"></i>
+                    <span>Volver a Grupos</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Card principal -->
+        <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden transform transition-all hover:shadow-2xl">
+            <!-- Header del formulario -->
+            <div class="bg-gradient-to-r from-ito-orange to-ito-red p-8 text-center relative overflow-hidden">
+                <!-- Elementos decorativos de fondo -->
+                <div class="absolute top-0 left-0 w-full h-full overflow-hidden opacity-10">
+                    <div class="absolute -top-8 -right-8 w-32 h-32 bg-white rounded-full"></div>
+                    <div class="absolute -bottom-8 -left-8 w-32 h-32 bg-white rounded-full"></div>
+                </div>
+                
+                <div class="relative z-10">
+                    <div class="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-5 shadow-lg">
+                        <i data-lucide="plus-circle" class="w-10 h-10 text-white"></i>
+                    </div>
+                    <h1 class="text-3xl font-bold text-white mb-3">Crear Nuevo Grupo</h1>
+                    <p class="text-orange-100 text-sm max-w-md mx-auto">Configura un nuevo grupo para gestionar la asistencia de tus estudiantes en el Instituto Tecnológico de Oaxaca</p>
+                </div>
+            </div>
+
+            <!-- Mensajes flash -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            <div class="p-6 pb-0">
+                {% for category, message in messages %}
+                <div
+                    class="mb-4 p-4 rounded-lg flex items-center space-x-3 {% if category == 'success' %}bg-green-50 text-green-700 border border-green-200{% else %}bg-red-50 text-red-700 border border-red-200{% endif %} animate-fadeIn">
+                    <i data-lucide="{% if category == 'success' %}check-circle{% else %}alert-circle{% endif %}"
+                        class="w-5 h-5 flex-shrink-0"></i>
+                    <span class="text-sm">{{ message }}</span>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% endwith %}
+
+            <!-- Contenido del formulario -->
+            <div class="p-6 sm:p-8">
+                <form method="POST" action="{{ url_for('add_group') }}" class="space-y-8">
+                    <!-- Información básica del grupo -->
+                    <div class="space-y-6">
+                        <div class="border-b border-gray-200 pb-4">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
+                                    <i data-lucide="clipboard" class="w-4 h-4 text-ito-orange"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-semibold text-ito-dark">Información Básica</h3>
+                                    <p class="text-sm text-ito-light-gray">Datos principales del grupo</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Nombre del Grupo -->
+                        <div class="space-y-2">
+                            <label for="group_name" class="block text-sm font-medium text-ito-gray flex items-center space-x-1">
+                                <span>Nombre del Grupo</span>
+                                <span class="text-ito-red">*</span>
+                            </label>
+                            <div class="relative group">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i data-lucide="users" class="w-5 h-5 text-gray-400 group-focus-within:text-ito-orange transition-colors"></i>
+                                </div>
+                                <input type="text" name="group_name" id="group_name" required
+                                    class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ito-orange focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white shadow-sm"
+                                    placeholder="Ej. 1-A, 2-B, 3-C">
+                            </div>
+                            <p class="text-xs text-ito-light-gray flex items-center space-x-1">
+                                <i data-lucide="info" class="w-3 h-3"></i>
+                                <span>Formato recomendado: [Semestre]-[Grupo] (Ej. 1-A)</span>
+                            </p>
+                        </div>
+
+                        <!-- Materia -->
+                        <div class="space-y-2">
+                            <label for="materia" class="block text-sm font-medium text-ito-gray flex items-center space-x-1">
+                                <span>Materia</span>
+                                <span class="text-ito-red">*</span>
+                            </label>
+                            <div class="relative group">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i data-lucide="book-open" class="w-5 h-5 text-gray-400 group-focus-within:text-ito-orange transition-colors"></i>
+                                </div>
+                                <select name="materia" id="materia" required
+                                    class="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ito-orange focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white appearance-none shadow-sm">
+                                    <option value="">Selecciona una materia</option>
+                                    <option value="Matemáticas">Matemáticas</option>
+                                    <option value="Física">Física</option>
+                                    <option value="Química">Química</option>
+                                    <option value="Programación">Programación</option>
+                                    <option value="Base de Datos">Base de Datos</option>
+                                    <option value="Redes">Redes</option>
+                                    <option value="Sistemas Operativos">Sistemas Operativos</option>
+                                    <option value="Ingeniería de Software">Ingeniería de Software</option>
+                                    <option value="Electrónica">Electrónica</option>
+                                    <option value="Mecánica">Mecánica</option>
+                                    <option value="Gestión Empresarial">Gestión Empresarial</option>
+                                    <option value="Otra">Otra (especificar abajo)</option>
+                                </select>
+                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                    <i data-lucide="chevron-down" class="w-5 h-5 text-gray-400"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Materia personalizada (se muestra si selecciona "Otra") -->
+                        <div id="custom-materia" class="space-y-2 hidden animate-fadeIn">
+                            <label for="custom_materia_name" class="block text-sm font-medium text-ito-gray">
+                                Especifica la materia
+                            </label>
+                            <div class="relative group">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i data-lucide="edit-3" class="w-5 h-5 text-gray-400 group-focus-within:text-ito-orange transition-colors"></i>
+                                </div>
+                                <input type="text" name="custom_materia_name" id="custom_materia_name"
+                                    class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ito-orange focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white shadow-sm"
+                                    placeholder="Nombre de la materia">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Configuración adicional -->
+                    <div class="space-y-6">
+                        <div class="border-b border-gray-200 pb-4">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                                    <i data-lucide="settings" class="w-4 h-4 text-blue-600"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-semibold text-ito-dark">Configuración Adicional</h3>
+                                    <p class="text-sm text-ito-light-gray">Información complementaria del grupo</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Grid de 2 columnas para semestre y carrera -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <!-- Semestre -->
+                            <div class="space-y-2">
+                                <label for="semestre" class="block text-sm font-medium text-ito-gray">
+                                    Semestre
+                                </label>
+                                <div class="relative group">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i data-lucide="calendar" class="w-5 h-5 text-gray-400 group-focus-within:text-ito-orange transition-colors"></i>
+                                    </div>
+                                    <select name="semestre" id="semestre"
+                                        class="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ito-orange focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white appearance-none shadow-sm">
+                                        <option value="">Selecciona el semestre</option>
+                                        <option value="1">1er Semestre</option>
+                                        <option value="2">2do Semestre</option>
+                                        <option value="3">3er Semestre</option>
+                                        <option value="4">4to Semestre</option>
+                                        <option value="5">5to Semestre</option>
+                                        <option value="6">6to Semestre</option>
+                                        <option value="7">7mo Semestre</option>
+                                        <option value="8">8vo Semestre</option>
+                                        <option value="9">9no Semestre</option>
+                                    </select>
+                                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                        <i data-lucide="chevron-down" class="w-5 h-5 text-gray-400"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Carrera -->
+                            <div class="space-y-2">
+                                <label for="carrera" class="block text-sm font-medium text-ito-gray">
+                                    Carrera
+                                </label>
+                                <div class="relative group">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i data-lucide="graduation-cap" class="w-5 h-5 text-gray-400 group-focus-within:text-ito-orange transition-colors"></i>
+                                    </div>
+                                    <select name="carrera" id="carrera"
+                                        class="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ito-orange focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white appearance-none shadow-sm">
+                                        <option value="">Selecciona la carrera</option>
+                                        <option value="Sistemas Computacionales">Ingeniería en Sistemas Computacionales</option>
+                                        <option value="Industrial">Ingeniería Industrial</option>
+                                        <option value="Electrónica">Ingeniería Electrónica</option>
+                                        <option value="Mecánica">Ingeniería Mecánica</option>
+                                        <option value="Civil">Ingeniería Civil</option>
+                                        <option value="Gestión Empresarial">Ingeniería en Gestión Empresarial</option>
+                                    </select>
+                                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                        <i data-lucide="chevron-down" class="w-5 h-5 text-gray-400"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Descripción opcional -->
+                        <div class="space-y-2">
+                            <label for="descripcion" class="block text-sm font-medium text-ito-gray">
+                                Descripción (Opcional)
+                            </label>
+                            <div class="relative group">
+                                <textarea name="descripcion" id="descripcion" rows="3"
+                                    class="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ito-orange focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white resize-none shadow-sm"
+                                    placeholder="Información adicional sobre el grupo..."></textarea>
+                            </div>
+                            <p class="text-xs text-ito-light-gray flex items-center space-x-1">
+                                <i data-lucide="message-circle" class="w-3 h-3"></i>
+                                <span>Puedes incluir detalles como horarios, aula o información específica del grupo</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Información adicional dentro del formulario -->
+                    <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                        <div class="flex items-start space-x-3">
+                            <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="info" class="w-5 h-5 text-blue-600"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-blue-900 mb-2">Información importante</h4>
+                                <ul class="text-sm text-blue-700 space-y-2">
+                                    <li class="flex items-start space-x-2">
+                                        <i data-lucide="check-circle" class="w-4 h-4 mt-0.5 flex-shrink-0"></i>
+                                        <span>Una vez creado el grupo, podrás agregar estudiantes desde la vista del grupo</span>
+                                    </li>
+                                    <li class="flex items-start space-x-2">
+                                        <i data-lucide="check-circle" class="w-4 h-4 mt-0.5 flex-shrink-0"></i>
+                                        <span>El nombre del grupo debe ser único para evitar confusiones</span>
+                                    </li>
+                                    <li class="flex items-start space-x-2">
+                                        <i data-lucide="check-circle" class="w-4 h-4 mt-0.5 flex-shrink-0"></i>
+                                        <span>Puedes editar la información del grupo después de crearlo</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botones de acción -->
+                    <div class="flex flex-col sm:flex-row gap-3 pt-6 border-t border-gray-200">
+                        <button type="button" onclick="window.history.back()"
+                            class="flex-1 bg-gray-100 text-ito-gray py-3 px-6 rounded-lg font-medium hover:bg-gray-200 transition-colors duration-200 flex items-center justify-center space-x-2 shadow-sm">
+                            <i data-lucide="x" class="w-5 h-5"></i>
+                            <span>Cancelar</span>
+                        </button>
+
+                        <button type="submit"
+                            class="flex-1 bg-gradient-to-r from-ito-orange to-ito-red text-white py-3 px-6 rounded-lg font-medium hover:from-orange-700 hover:to-red-700 transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center space-x-2 shadow-md">
+                            <i data-lucide="check" class="w-5 h-5"></i>
+                            <span>Crear Grupo</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Footer con información adicional -->
+        <div class="mt-6 text-center">
+            <p class="text-xs text-ito-light-gray">
+                Sistema de Control de Asistencia v2.0 - Instituto Tecnológico de Oaxaca
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Script para funcionalidad adicional -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        lucide.createIcons();
+
+        // Mostrar/ocultar campo de materia personalizada
+        const materiaSelect = document.getElementById('materia');
+        const customMateriaDiv = document.getElementById('custom-materia');
+        const customMateriaInput = document.getElementById('custom_materia_name');
+
+        materiaSelect.addEventListener('change', function () {
+            if (this.value === 'Otra') {
+                customMateriaDiv.classList.remove('hidden');
+                customMateriaInput.required = true;
+                customMateriaInput.focus();
+            } else {
+                customMateriaDiv.classList.add('hidden');
+                customMateriaInput.required = false;
+                customMateriaInput.value = '';
+            }
+        });
+
+        // Validación del formulario
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function (e) {
+            const groupName = document.getElementById('group_name').value.trim();
+            const materia = document.getElementById('materia').value;
+
+            if (!groupName || !materia) {
+                e.preventDefault();
+                alert('Por favor completa todos los campos obligatorios.');
+                return;
+            }
+
+            if (materia === 'Otra' && !customMateriaInput.value.trim()) {
+                e.preventDefault();
+                alert('Por favor especifica el nombre de la materia.');
+                customMateriaInput.focus();
+                return;
+            }
+        });
+
+        // Efecto de focus en los grupos de inputs
+        const inputGroups = document.querySelectorAll('.group');
+        inputGroups.forEach(group => {
+            const input = group.querySelector('input, select, textarea');
+            input.addEventListener('focus', () => {
+                group.classList.add('ring-1', 'ring-ito-orange/20', 'ring-offset-1');
+            });
+            input.addEventListener('blur', () => {
+                group.classList.remove('ring-1', 'ring-ito-orange/20', 'ring-offset-1');
+            });
+        });
+    });
+</script>
+
+<style>
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .animate-fadeIn {
+        animation: fadeIn 0.3s ease-out forwards;
+    }
+</style>
+{% endblock %}
